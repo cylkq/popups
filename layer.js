@@ -1,41 +1,32 @@
-/* 弹出层插件 */
+/* 创建元素节点 */
+var div = document.createElement("div");
+div.id = 'layerId';
+div.style.position = 'fixed';
+div.style.top = '0';
+document.body.appendChild(div);
+document.body.insertBefore(div, document.body.firstElementChild);
 
-document.write("<div id='layerId' style='position:absolute;'></div>");
-
+/* 弹出层调用方法 */
 var layer = {
 	show : function (info,type) 
 	{
 		var timestamp = (new Date()).valueOf(); 
-		var top = getScrollTop();
 		var html = htmlInfo(info,timestamp);
 		var popup = cssInfo(html,type,timestamp,top);
-		animates(top + 70,timestamp);
+		animates(70,timestamp,1);
 		var timeout=setTimeout(function () {
-        	document.getElementById('layerId').removeChild(document.getElementById(timestamp));
+			animates( -80,timestamp,0);
+			var timeout=setTimeout(function () {
+	        	document.getElementById('layerId').removeChild(document.getElementById(timestamp));
+			}, 1000);	
     	}, 3000);
-
 	}
-}
-
-/* 获取窗口滚动条高度 */
-function getScrollTop()
-{
-    var scrollTop=0;
-    if(document.documentElement&&document.documentElement.scrollTop)
-    {
-        scrollTop=document.documentElement.scrollTop;
-    }
-    else if(document.body)
-    {
-        scrollTop=document.body.scrollTop;
-    }
-    return scrollTop;
 }
 
 /* 拼接html内容 */
 function htmlInfo(info,timestamp)
 {
-	var html = "<div id='" + timestamp + "' style='position:absolute;top:-50px;'>" + info + "<div>";
+	var html = "<div id='" + timestamp + "' style='position:fixed;top:-50px;'>" + info + "<div>";
 	return html;
 }
 
@@ -59,20 +50,25 @@ function cssInfo(html,type,timestamp,top)
 }
 
 /* js 动画 */
-function animates(n,t)
+function animates(n,t,s)
 {
 	var timer = null;
 	var obj = document.getElementById(t);
+	var speed = s == 1 ? 3 : -3 ;
 	clearInterval(timer);
 	timer=setInterval(function(){
-		var speed = 3;
-		if (obj.offsetTop >= n) 
-		{
-			clearInterval(timer);
-		}
-		else
-		{
-			obj.style.top = obj.offsetTop + speed + 'px';
-		}
+		if (s == 1){
+			if (obj.offsetTop >= n) {
+				clearInterval(timer);
+			} else {
+				obj.style.top = obj.offsetTop + speed + 'px';
+			}
+		} else {
+			if (obj.offsetTop <= n) {
+				clearInterval(timer);
+			} else {
+				obj.style.top = obj.offsetTop + speed + 'px';
+			}			
+		}	
 	},10);
 }
