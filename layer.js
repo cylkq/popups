@@ -3,6 +3,7 @@ var div = document.createElement("div");
 div.id = 'layerId';
 div.style.position = 'fixed';
 div.style.top = '0';
+div.style.zIndex = '998';
 document.body.appendChild(div);
 document.body.insertBefore(div, document.body.firstElementChild);
 
